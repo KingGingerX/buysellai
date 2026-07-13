@@ -19,7 +19,7 @@ Use the included `Dockerfile` or `render.yaml` to deploy the app.
 
 ## DNS Records To Replace Parking
 
-After the Node host creates the production service and custom domain, replace Namecheap parking records with the records from that host.
+After Render creates the production service and custom domain, replace Namecheap parking records with the records from Render.
 
 Typical setup:
 

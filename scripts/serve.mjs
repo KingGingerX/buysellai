@@ -37,6 +37,8 @@ const dataDirectory = join(root, "data");
 const storePath = join(dataDirectory, "store.json");
 const host = process.env.HOST ?? "127.0.0.1";
 const port = Number(process.env.PORT ?? 4173);
+const isProduction = process.env.NODE_ENV === "production";
+const stripeTimeoutMs = Number(process.env.STRIPE_TIMEOUT_MS ?? 10000);
 const types = new Map([
   [".css", "text/css; charset=utf-8"],
   [".html", "text/html; charset=utf-8"],
@@ -77,6 +79,22 @@ const server = createServer(async (request, response) => {
 server.listen(port, host, () => {
   process.stdout.write(`BuySellAI.store available at http://${host}:${port}\n`);
 });
+
+process.on("SIGTERM", () => void shutdown("SIGTERM"));
+process.on("SIGINT", () => void shutdown("SIGINT"));
+
+async function shutdown(signal) {
+  process.stdout.write(`Received ${signal}; draining writes before shutdown.\n`);
+  server.close(async () => {
+    try {
+      await writeQueue;
+      process.exit(0);
+    } catch (error) {
+      process.stderr.write(`${error.stack}\n`);
+      process.exit(1);
+    }
+  });
+}
 
 async function handleApi(request, response, url) {
   if (!sameOrigin(request)) {
@@ -449,7 +467,8 @@ async function stripeRequest(secret, url, body) {
       Authorization: `Bearer ${secret}`,
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    method: "POST"
+    method: "POST",
+    signal: AbortSignal.timeout(stripeTimeoutMs)
   });
   const payload = await response.json();
 
@@ -531,7 +550,8 @@ function sendJson(response, status, payload) {
 }
 
 function setSessionCookie(response, token) {
-  response.setHeader("Set-Cookie", `bsa_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=1209600`);
+  const secure = isProduction ? "; Secure" : "";
+  response.setHeader("Set-Cookie", `bsa_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=1209600${secure}`);
 }
 
 function readCookie(request, name) {

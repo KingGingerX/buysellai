@@ -4,6 +4,10 @@ services:
     runtime: docker
     plan: starter
     healthCheckPath: /healthz
+    disk:
+      name: buysellai-store-data
+      mountPath: /app/data
+      sizeGB: 1
     envVars:
       - key: HOST
         value: 0.0.0.0

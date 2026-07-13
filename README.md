@@ -16,6 +16,15 @@ npm run validate
 npm run watchdog
 ```
 
+## Production Docs
+
+- `docs/ENVIRONMENT.md`
+- `docs/DEPLOYMENT.md`
+- `docs/OPERATIONS.md`
+- `docs/TROUBLESHOOTING.md`
+- `docs/DOMAIN.md`
+- `docs/SECURITY.md`
+
 ## Domain
 
 `buysellai.store` is configured as the production domain target in `.env.example`, `render.yaml`, and `docs/DOMAIN.md`. DNS still must be changed at the registrar from Namecheap parking to the records supplied by the production Node host.
