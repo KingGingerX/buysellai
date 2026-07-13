@@ -1,0 +1,9 @@
+{
+  "name": "BuySellAI.store",
+  "short_name": "BuySellAI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "description": "Marketplace for verified AI assets and implementation services."
+}

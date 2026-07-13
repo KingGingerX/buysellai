@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="BuySellAI.store is an authenticated marketplace for AI automations, prompt systems, agent workflows, datasets, and implementation services."
+    />
+    <meta name="theme-color" content="#0d1117" />
+    <meta property="og:title" content="BuySellAI.store marketplace" />
+    <meta
+      property="og:description"
+      content="Buy and sell AI assets with account-gated pricing, seller identity controls, Stripe Connect payout readiness, and complaint workflows."
+    />
+    <title>BuySellAI.store | AI Marketplace</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script type="module" src="/assets/app.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="BuySellAI.store home">
+        <span class="brand-mark" aria-hidden="true">B</span>
+        <span>BuySellAI.store</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#marketplace">Marketplace</a>
+        <a href="#seller-dashboard">Seller</a>
+        <a href="#buyer-dashboard">Buyer</a>
+        <a href="#admin-dashboard">Admin</a>
+        <a href="#legal">Legal</a>
+      </nav>
+      <div class="account-bar">
+        <span id="session-label">Signed out</span>
+        <button id="logout-button" class="button secondary small hidden" type="button">Sign out</button>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero-band">
+        <div class="hero-content">
+          <p class="eyebrow">Authenticated AI asset exchange</p>
+          <h1>BuySellAI.store</h1>
+          <p class="hero-copy">
+            A server-backed marketplace for AI automations, prompt systems, datasets, and implementation
+            services with locked pricing, authenticated seller identity, payout onboarding, seller-owned refunds,
+            and legal workflows.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#auth">Create account</a>
+            <a class="button secondary" href="#marketplace">Browse marketplace</a>
+          </div>
+        </div>
+        <div class="market-snapshot" aria-label="Marketplace controls">
+          <div>
+            <span class="metric">Login</span>
+            <span>required for prices and seller identity</span>
+          </div>
+          <div>
+            <span class="metric">Stripe</span>
+            <span>Connect onboarding gated by real configuration</span>
+          </div>
+          <div>
+            <span class="metric">DMCA</span>
+            <span>recorded complaint and review workflow</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="auth">
+        <div class="section-heading compact">
+          <p class="eyebrow">Authentication</p>
+          <h2>Account access</h2>
+          <p>First account created becomes the administrator. Buyer and seller accounts are separated by role.</p>
+        </div>
+        <div class="auth-grid">
+          <form class="panel-form" id="register-form" novalidate>
+            <h3>Create account</h3>
+            <label>
+              <span>Name</span>
+              <input name="name" required minlength="2" maxlength="80" autocomplete="name" />
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" required type="email" maxlength="160" autocomplete="email" />
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" required type="password" minlength="12" autocomplete="new-password" />
+            </label>
+            <label>
+              <span>Role</span>
+              <select name="role" required>
+                <option value="buyer">Buyer</option>
+                <option value="seller">Seller</option>
+              </select>
+            </label>
+            <button class="button primary" type="submit">Create account</button>
+            <p class="form-status" id="register-status" role="status"></p>
+          </form>
+
+          <form class="panel-form" id="login-form" novalidate>
+            <h3>Sign in</h3>
+            <label>
+              <span>Email</span>
+              <input name="email" required type="email" maxlength="160" autocomplete="email" />
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" required type="password" autocomplete="current-password" />
+            </label>
+            <button class="button primary" type="submit">Sign in</button>
+            <p class="form-status" id="login-status" role="status"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section band-muted" id="marketplace">
+        <div class="section-heading">
+          <p class="eyebrow">Search</p>
+          <h2>Marketplace browse</h2>
+          <p>
+            Public visitors can inspect categories and licensing. Authenticated users can see locked price and
+            seller identity, add listings to buyer carts, and purchase through Stripe-backed server order state.
+          </p>
+        </div>
+
+        <form class="toolbar" id="filters" aria-label="Marketplace filters">
+          <label>
+            <span>Search</span>
+            <input id="search" name="search" type="search" autocomplete="off" aria-label="Search listings" />
+          </label>
+          <label>
+            <span>Category</span>
+            <select id="category" name="category"></select>
+          </label>
+          <label>
+            <span>License</span>
+            <select id="license" name="license"></select>
+          </label>
+        </form>
+
+        <div class="category-strip" id="category-strip" aria-label="Available categories"></div>
+        <div class="listing-grid" id="listing-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="section" id="seller-dashboard">
+        <div class="section-heading compact">
+          <p class="eyebrow">Seller dashboard</p>
+          <h2>Listings, identity, and payouts</h2>
+          <p>Seller identity is attached from the authenticated account. Listing price cannot be supplied by buyers.</p>
+        </div>
+        <form class="seller-form" id="seller-form" novalidate>
+          <div class="form-grid">
+            <label>
+              <span>Asset name</span>
+              <input name="title" required minlength="4" maxlength="80" autocomplete="off" />
+            </label>
+            <label>
+              <span>Category</span>
+              <select name="category" required></select>
+            </label>
+            <label>
+              <span>License</span>
+              <select name="license" required></select>
+            </label>
+            <label>
+              <span>Price USD</span>
+              <input name="price" required inputmode="decimal" min="1" max="50000" step="1" type="number" />
+            </label>
+            <label>
+              <span>Support window</span>
+              <input name="supportWindow" required minlength="3" maxlength="40" aria-label="Support window" />
+            </label>
+          </div>
+          <label>
+            <span>Operational proof</span>
+            <textarea name="proof" required minlength="24" maxlength="500" aria-label="Operational proof"></textarea>
+          </label>
+          <label>
+            <span>Buyer deliverables</span>
+            <textarea name="deliverables" required minlength="24" maxlength="500" aria-label="Buyer deliverables"></textarea>
+          </label>
+          <label class="checkline">
+            <input name="warranty" type="checkbox" required />
+            <span>I confirm this listing is owned by this authenticated seller account and includes the stated rights.</span>
+          </label>
+          <div class="seller-controls">
+            <button class="button primary" type="submit">Submit listing</button>
+            <button class="button secondary" id="stripe-connect-button" type="button">Start Stripe Connect</button>
+          </div>
+          <p class="form-status" id="seller-status" role="status"></p>
+        </form>
+        <div class="dashboard-panel" id="seller-panel" aria-live="polite"></div>
+      </section>
+
+      <section class="section band-dark" id="buyer-dashboard">
+        <div class="section-heading compact">
+          <p class="eyebrow">Buyer dashboard</p>
+          <h2>Cart and orders</h2>
+        </div>
+        <div id="buyer-panel" class="cart-panel" aria-live="polite"></div>
+      </section>
+
+      <section class="section split" id="legal">
+        <div>
+          <p class="eyebrow">Legal pages</p>
+          <h2>Marketplace policy center</h2>
+          <p>
+            Legal content is served from the application API so the interface and complaint workflows stay
+            attached to one operating system.
+          </p>
+        </div>
+        <div class="control-list" id="legal-pages"></div>
+      </section>
+
+      <section class="section" id="dmca">
+        <div class="section-heading compact">
+          <p class="eyebrow">DMCA and copyright</p>
+          <h2>Complaint workflow</h2>
+          <p>Complaints are persisted with claimant, work, listing reference, sworn statement, and status.</p>
+        </div>
+        <div class="auth-grid">
+          <form class="panel-form" id="dmca-form" novalidate>
+            <h3>DMCA notice</h3>
+            <label><span>Claimant name</span><input name="claimantName" required minlength="2" maxlength="120" /></label>
+            <label><span>Claimant email</span><input name="claimantEmail" required type="email" maxlength="160" /></label>
+            <label><span>Listing ID or URL</span><input name="listingReference" required minlength="4" maxlength="220" /></label>
+            <label><span>Copyrighted work</span><textarea name="workDescription" required minlength="24" maxlength="900"></textarea></label>
+            <label><span>Infringing material</span><textarea name="infringingMaterial" required minlength="24" maxlength="900"></textarea></label>
+            <label class="checkline"><input name="goodFaith" type="checkbox" required /><span>I state in good faith that the disputed use is not authorized.</span></label>
+            <label class="checkline"><input name="accuracy" type="checkbox" required /><span>I certify under penalty of perjury that this notice is accurate.</span></label>
+            <button class="button primary" type="submit">File DMCA notice</button>
+            <p class="form-status" id="dmca-status" role="status"></p>
+          </form>
+          <form class="panel-form" id="copyright-form" novalidate>
+            <h3>Copyright complaint</h3>
+            <label><span>Reporter name</span><input name="reporterName" required minlength="2" maxlength="120" /></label>
+            <label><span>Reporter email</span><input name="reporterEmail" required type="email" maxlength="160" /></label>
+            <label><span>Listing ID or URL</span><input name="listingReference" required minlength="4" maxlength="220" /></label>
+            <label><span>Complaint details</span><textarea name="details" required minlength="24" maxlength="1200"></textarea></label>
+            <button class="button primary" type="submit">Submit complaint</button>
+            <p class="form-status" id="copyright-status" role="status"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section band-muted" id="admin-dashboard">
+        <div class="section-heading compact">
+          <p class="eyebrow">Admin dashboard</p>
+          <h2>Operations review</h2>
+          <p>Admin access requires the first account or an existing admin session.</p>
+        </div>
+        <div class="dashboard-panel" id="admin-panel" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>BuySellAI.store</span>
+      <span>Authenticated AI marketplace foundation</span>
+    </footer>
+  </body>
+</html>

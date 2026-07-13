@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: buysellai-store
+    runtime: docker
+    plan: starter
+    healthCheckPath: /healthz
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: NODE_ENV
+        value: production
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_CONNECT_REFRESH_URL
+        value: https://buysellai.store/#seller-dashboard
+      - key: STRIPE_CONNECT_RETURN_URL
+        value: https://buysellai.store/#seller-dashboard
+      - key: STRIPE_CHECKOUT_SUCCESS_URL
+        value: https://buysellai.store/#buyer-dashboard
+      - key: STRIPE_CHECKOUT_CANCEL_URL
+        value: https://buysellai.store/#buyer-dashboard
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
